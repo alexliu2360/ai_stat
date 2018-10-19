@@ -88,7 +88,7 @@ def load_predict_model(columns):
 def sentiment_submit_manager():
     x_submit_cut, x_submit_set = submit_preprocess()
     x_submit = input_transform(x_submit_cut)
-    predict_model_dict = load_predict_model(x_submit_set.columns)
+    predict_model_dict = load_predict_model(x_submit_set.columns[2:])
     for col in x_submit_set.columns[2:]:
         print('{} columns is predicting'.format(col))
         y_submit_pred = pd.Series([0] * x_submit.shape[0])
@@ -96,7 +96,7 @@ def sentiment_submit_manager():
             y_pred = np.argmax(predict_model_dict[col].predict(x_submit[ind].reshape(1, -1)))
             y_submit_pred[ind] = y_pred - 2
         x_submit_set[col] = y_submit_pred
-    x_submit_set.to_csv(SUBMIT_RESULT_PATH, encoding='utf-8')
+    x_submit_set.to_csv(SUBMIT_RESULT_PATH, encoding='utf-8', index=False)
     print(x_submit)
     return True
 
